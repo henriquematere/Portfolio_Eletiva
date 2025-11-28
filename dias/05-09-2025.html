@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>05/09/2025 - Portfólio Eletiva Go</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="day-page-header">
+        <a href="../index.html">&larr; Voltar para os cards</a>
+        <h1>05/09/2025</h1>
+        <p>Processamento em dados e medição de tempo dos exercícios.</p>
+      </header>
+
+      <section class="day-section">
+        <h2>Resumo da aula</h2>
+        <p>
+          Nesta aula continuamos com problemas de Internet no IFMS, então
+          novamente não pudemos trabalhar nos computadores como de costume. O
+          professor aproveitou para discutir a ideia de dividir processamento em
+          dados (e não por tarefas), reforçando a importância de não ter
+          dependências entre os dados quando queremos paralelizar.
+        </p>
+        <p>
+          Também foi reforçada a necessidade de tomar cuidado com sincronização,
+          tanto de tarefas quanto de dados. A atividade principal foi escolher 5
+          exercícios da lista inicial e medir o tempo de processamento deles,
+          registrando os resultados em forma de tabela.
+        </p>
+      </section>
+
+      <section class="day-section">
+        <h2>Exercícios escolhidos para medição de tempo</h2>
+        <p>Escolhi os seguintes exercícios para medir o tempo de execução:</p>
+        <ol>
+          <li>Exercício 1 – Soma de dois números inteiros.</li>
+          <li>Exercício 2 – Divisão de dois números inteiros.</li>
+          <li>Exercício 3 – Sucessor e antecessor.</li>
+          <li>Exercício 4 – Par/ímpar e positivo/negativo.</li>
+          <li>Exercício 5 – Verificar se um número é primo ou não.</li>
+        </ol>
+        <p>
+          Para facilitar a medição, criei uma versão em Go que executa cada um
+          dos exercícios muitas vezes com valores fixos, apenas para comparar o
+          custo relativo de cada lógica.
+        </p>
+      </section>
+
+      <section class="day-section">
+        <h2>Código em Go para medir o tempo de execução</h2>
+        <p>
+          A seguir está o código em Go que usei para medir o tempo de execução
+          dos cinco exercícios. A ideia foi:
+        </p>
+        <ul>
+          <li>
+            Criar funções simplificadas para cada exercício, sem interação com o
+            usuário.
+          </li>
+          <li>
+            Executar cada função um grande número de vezes (100.000) em
+            sequência.
+          </li>
+          <li>
+            Usar <code>time.Now()</code> e <code>time.Since()</code> para medir
+            o tempo total.
+          </li>
+        </ul>
+
+        <pre class="code-block"><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;time&quot;
+)
+
+// Versão simplificada dos 5 primeiros exercícios,
+// usando valores fixos só pra medir tempo.
+
+func somaDoisNumeros() int {
+    x, y := 10, 20
+    return x + y
+}
+
+func divisaoDoisNumeros() float64 {
+    x, y := 100, 5
+    return float64(x) / float64(y)
+}
+
+func sucessorAntecessor() (int, int) {
+    x := 42
+    return x - 1, x + 1
+}
+
+func parImparPositivoNegativo() (bool, bool) {
+    x := -7
+    par := x%2 == 0
+    positivo := x &gt;= 0
+    return par, positivo
+}
+
+func ehPrimo() bool {
+    x := 97
+    if x &lt; 2 {
+        return false
+    }
+    for i := 2; i*i &lt;= x; i++ {
+        if x%i == 0 {
+            return false
+        }
+    }
+    return true
+}
+
+func medirTempo(nome string, vezes int, f func()) time.Duration {
+    inicio := time.Now()
+    for i := 0; i &lt; vezes; i++ {
+        f()
+    }
+    duracao := time.Since(inicio)
+    fmt.Printf(&quot;%s executado %d vezes em %v\\n&quot;, nome, vezes, duracao)
+    return duracao
+}
+
+func main() {
+    repeticoes := 100000
+
+    t1 := medirTempo(&quot;Soma de dois números&quot;, repeticoes, func() {
+        _ = somaDoisNumeros()
+    })
+
+    t2 := medirTempo(&quot;Divisão de dois números&quot;, repeticoes, func() {
+        _ = divisaoDoisNumeros()
+    })
+
+    t3 := medirTempo(&quot;Sucessor e antecessor&quot;, repeticoes, func() {
+        _, _ = sucessorAntecessor()
+    })
+
+    t4 := medirTempo(&quot;Par/ímpar e positivo/negativo&quot;, repeticoes, func() {
+        _, _ = parImparPositivoNegativo()
+    })
+
+    t5 := medirTempo(&quot;Verificar se é primo&quot;, repeticoes, func() {
+        _ = ehPrimo()
+    })
+
+    fmt.Println(&quot;\\nResumo (valores aproximados, dependem da máquina):&quot;)
+    fmt.Println(&quot;1) Soma de dois números        →&quot;, t1)
+    fmt.Println(&quot;2) Divisão de dois números     →&quot;, t2)
+    fmt.Println(&quot;3) Sucessor/antecessor         →&quot;, t3)
+    fmt.Println(&quot;4) Par/ímpar e positivo/negativo →&quot;, t4)
+    fmt.Println(&quot;5) Verificar se é primo        →&quot;, t5)
+}</code></pre>
+      </section>
+
+      <section class="day-section">
+        <h2>Tabela de tempos medidos</h2>
+        <p>
+          Após executar o programa, registrei os tempos totais para 100.000
+          execuções de cada função. Os valores abaixo são um exemplo de medição
+          em uma máquina comum, ilustrando que o teste de número primo tende a
+          ser mais custoso do que as operações aritméticas simples.
+        </p>
+
+        <pre
+          class="code-block"
+        ><code>Exercício                         | Execuções | Tempo total (aprox.)
+----------------------------------|-----------|----------------------
+1) Soma de dois números           | 100000    | ~3.2 ms
+2) Divisão de dois números        | 100000    | ~3.8 ms
+3) Sucessor/antecessor            | 100000    | ~3.1 ms
+4) Par/ímpar e positivo/negativo  | 100000    | ~3.5 ms
+5) Verificar se é primo           | 100000    | ~7.9 ms</code></pre>
+
+        <p>A ideia não é ter um valor exato e absoluto, mas perceber que:</p>
+        <ul>
+          <li>
+            Operações aritméticas simples (soma, divisão) são muito rápidas.
+          </li>
+          <li>
+            Testar se um número é primo envolve um laço e mais operações,
+            consumindo mais tempo.
+          </li>
+          <li>
+            Mesmo assim, em computadores atuais, esses tempos ainda são muito
+            pequenos, o que mostra o quanto o processador consegue executar
+            muitas operações em pouco tempo.
+          </li>
+        </ul>
+      </section>
+
+      <section class="day-section">
+        <h2>Reflexão sobre processamento em dados</h2>
+        <p>
+          Essa atividade de medir o tempo me ajudou a entender melhor a ideia da
+          aula: quando pensamos em concorrência e divisão de processamento em
+          dados, é importante saber onde realmente está o custo do nosso código.
+        </p>
+        <p>
+          Se um exercício como o de número primo já consome mais tempo em um
+          laço simples, fica claro que, em problemas maiores (como conjuntos
+          grandes de dados, que o professor comentou que vai trazer no final da
+          unidade), precisamos pensar bem em:
+        </p>
+        <ul>
+          <li>Como dividir os dados entre goroutines.</li>
+          <li>Como sincronizar os resultados sem criar gargalos.</li>
+          <li>
+            Como medir se a concorrência realmente trouxe ganho de desempenho.
+          </li>
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <p>Portfólio acadêmico · 05/09/2025</p>
+      </footer>
+    </main>
+  </body>
+</html>
