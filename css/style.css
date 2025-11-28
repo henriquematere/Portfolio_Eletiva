@@ -297,3 +297,75 @@ body {
         width: 100%;
     }
 }
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.foto-perfil {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #2e7d32; /* verde IFMS */
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap; /* pra não quebrar tudo no celular */
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-text h1 {
+  margin: 0 0 4px 0;
+}
+
+.header-text .subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.foto-perfil {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2e7d32; /* verdinho IFMS */
+}
+
+.student-box {
+  background: #f5f5f5;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  
+  margin: 0 auto;         /* centraliza horizontalmente */
+  text-align: left;       /* mantém o texto arrumado */
+  max-width: 380px;       /* mantém o bloco compacto e elegante */
+}
+
+
+/* Responsivo: em telas pequenas, tudo empilha bonitinho */
+@media (max-width: 600px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .student-box {
+    width: 100%;
+  }
+}
